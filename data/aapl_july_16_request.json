@@ -1,0 +1,16 @@
+{
+  "Normalized" : false,
+  "StartDate": "2016-07-01T00:00:00-00",
+  "EndDate": "2016-07-31T00:00:00-00",
+  "DataPeriod": "Day",
+  "DataInterval" : 0,
+  "LabelPeriod" : "Day",
+  "LabelInterval" : 1,
+  "Elements" : [
+    {
+      "Symbol" : "AAPL",
+      "Type" : "price",
+      "Params" : ["c"]
+    }
+  ]
+}
