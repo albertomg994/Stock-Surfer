@@ -15,7 +15,7 @@ window.onload = function() {
  SurfGame.prototype = {
 
     // Measures and resolutions
-    w: 981,
+    w: 961,
     h: 1550,
     heightButton: 200,
     widthButton: 327,
@@ -171,7 +171,7 @@ window.onload = function() {
 
     
     
-  var game = new Phaser.Game(981, 1550, Phaser.AUTO, '');
+  var game = new Phaser.Game(961, 1550, Phaser.AUTO, '');
   game.state.add('Game',SurfGame,true);
   
   
