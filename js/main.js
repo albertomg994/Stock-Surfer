@@ -1,96 +1,98 @@
 window.onload = function() {
+    
+    var SurfGame = function () {
 
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+        this.bmd = null;
 
-  var display_array = []
+        this.points = {
+            'x': [ 32, 128, 256, 384, 512, 608 ],
+            'y': [ 240, 240, 240, 240, 240, 240 ]
+        };
 
-  var companies_stocks = []
+    };
+    
+    
+ SurfGame.prototype = {
 
-  function init_companies_stocks(companies_stocks) {
-    var num_companies = 5;
-    var num_point_per_company = 150;
+    //Variables of the game
+    stockValues: new Array(),
+    graphPlot: undefined,
+    sprite: undefined,
+    
+    preload: function(){
+         game.load.image('logo', 'phaser.png');
+        
+    },
+    
+    create: function () {
 
-    // for each company with stock data
-    for (i = 0; i < num_companies; i++) {
-      // fill its stock array with points
+        //Put the logo on the background
+        var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
+        logo.anchor.setTo(0.5, 0.5);
+        game.time.advancedTiming = true;
+        
+        //Generate 100 random stock values
+        for (i = 0; i < 100; i++) {
+            var new_y = Math.floor((Math.random() * 100) + 1);  // between 1 and 100
+            this.stockValues.push(new_y);
+        }
+        
+        
+        //Generate the Graphic object for the plot
+        this.graphPlot = game.add.graphics(5,200);
+        this.bmd = this.add.bitmapData(this.game.width, this.game.height);
+        this.bmd.addToWorld();
+        this.generatePlotGraphic();
+        
+        //Generate the sprite for the graphic
+        this.sprite = game.add.sprite(400, 300, this.graphPlot.generateTexture());
+        this.sprite.anchor.set(0.5);
+        this.sprite.scale.setTo(3, 3);
+        this.graphPlot.destroy();
+        //this.sprite.animations.add('run');
+        //this.sprite.scale.setTo(10,10);
+        //this.sprite.animations.play('run', 10, true);
+
+    },
+
+    render: function () {
+        //xPosition++;
+        this.sprite.x -= 1;
+        //console.log("plot");
+
+        //game.debug.spriteInfo(this.sprite, 20, 32);
+        //this.bmd.clear();
+        //Simply plot the function
+        //this.graphPlot.moveTo(500,50);
+    
+
+
+    },
+    generatePlotGraphic: function(){
+        for (i = 0; i < this.stockValues.length - 1; i++) {
+          ini_y = this.stockValues[i];
+          fin_y = this.stockValues[i+1];
+          ini_x = i*5;
+          fin_x = (i+1)*5;
+
+
+          // set a fill and line style
+          this.graphPlot.beginFill(0xFF3300);
+          this.graphPlot.lineStyle(2, 0xffd900, 1);
+
+          // draw a shape
+          this.graphPlot.moveTo(ini_x, ini_y);
+          this.graphPlot.lineTo(fin_x, fin_y);
     }
-  }
-
-  function init_display_array(array) {
-    var max_elems = 150;
-    for (i = 0; i < max_elems; i++) {
-      var new_y = Math.floor((Math.random() * 100) + 1);  // between 1 and 100
-      array.push(new_y);
     }
-  }
 
-  // fill array with random data
-  init_display_array(display_array);
+};
 
-  function display_chart() {
-    // dibujar una línea entre cada una de las parejas de puntos del display_array
-    for (i = 0; i < display_array.length - 1; i++) {
-      ini_y = display_array[i];
-      fin_y = display_array[i+1];
-      ini_x = i*5;
-      fin_x = (i+1)*5;
-
-      var graphics = game.add.graphics(5, 200);
-
-      // set a fill and line style
-      graphics.beginFill(0xFF3300);
-      graphics.lineStyle(2, 0xffd900, 1);
-
-      // draw a shape
-      graphics.moveTo(ini_x, ini_y);
-      graphics.lineTo(fin_x, fin_y);
-    }
-  }
-
-  function preload () {
-
-    game.load.image('logo', 'phaser.png');
-
-  }
-
-  function create () {
-    var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
-    logo.anchor.setTo(0.5, 0.5);
-
-    // ---
-
-    /*var graphics = game.add.graphics(100, 100);
-
-    // set a fill and line style
-    graphics.beginFill(0xFF3300);
-    graphics.lineStyle(10, 0xffd900, 1);
-
-    // draw a shape
-    graphics.moveTo(50,50);
-    graphics.lineTo(250, 50);
-
-    for (i = 0; i < display_array.length; i++) {
-    var chart_box = game.add.graphics(0, 0);
-    chart_box.beginFill(0xFF0000, 1);
-    chart_box.drawCircle(i*10, display_array[i], 2)
-    }*/
-    //display_chart();
-  }
-
-  function update() {
-    // pop leftmost element in the graphics array
-    // push new element into the graphics array (from the right side)
-
-    display_array.shift();
-    var new_y = Math.floor((Math.random() * 100) + 1);  // between 1 and 100
-    display_array.push(new_y);
-  }
-
-  function render() {
-    game.world.removeAll()
-    // paint again the array
-    display_chart();
-    console.log("render!");
-  }
+    
+    
+  var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
+  game.state.add('Game',SurfGame,true);
+  
+  
 
 };
