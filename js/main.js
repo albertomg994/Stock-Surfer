@@ -14,7 +14,19 @@ window.onload = function() {
     
  SurfGame.prototype = {
 
+    // Measures and resolutions
+    w: 981,
+    h: 1550,
+    heightButton: 200,
+    widthButton: 327,
+
+    // Text buttons variables
+    button_1_text: undefined,
+    button_2_text: undefined,
+    button_3_text: undefined,
+
     //Variables of the game
+    pic: undefined,
     stockValues: new Array(),
     numCompanies: 3,
     all_companies_stock: new Array(),
@@ -23,10 +35,20 @@ window.onload = function() {
     
     preload: function(){
          game.load.image('logo', 'phaser.png');
+         game.load.image('main-buttons', 'assets/sprites/main-buttons.png');
         
     },
     
     create: function () {
+        // Add main buttons
+        this.pic = game.add.sprite(0, this.h-this.heightButton, 'main-buttons');
+        this.pic.scale.set(1);
+
+        this.button_1_text = game.add.text(this.widthButton/4, this.h-this.heightButton/1.5, "APPL", { font: "54px Arial", fill: "#ffffff" });
+        this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, "GOOGL", { font: "54px Arial", fill: "#ffffff" });
+        this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "YHOO", { font: "54px Arial", fill: "#ffffff" }); 
+
+        game.input.onTap.add(this.onTap, this);
 
         //Put the logo on the background
         var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
@@ -34,9 +56,7 @@ window.onload = function() {
         game.time.advancedTiming = true;
         
         
-        console.log("Que pasa loco");
         init_all_companies_stocks(this.all_companies_stock,this.numCompanies);
-        console.log("La pase");
         //Generate 100 random stock values
         /*for (i = 0; i < 100; i++) {
             var new_y = Math.floor((Math.random() * 100) + 1);  // between 1 and 100
@@ -98,13 +118,60 @@ window.onload = function() {
           graphObject.moveTo(ini_x, ini_y);
           graphObject.lineTo(fin_x, fin_y);
     }
+    },
+    changeButton: function(id, text){
+            switch(id){
+                case 1:
+                    this.button_1_text.destroy();
+                    this.button_1_text = game.add.text(this.widthButton/4, this.h-this.heightButton/1.5, text, { font: "54px Arial", fill: "#ffffff" });
+                    break;
+                case 2:
+                    this.button_2_text.destroy();
+                    this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, text, { font: "54px Arial", fill: "#ffffff" });
+                    break;
+                case 3:
+                    this.button_3_text.destroy();
+                    this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, text, { font: "54px Arial", fill: "#ffffff" });
+                    break;
+                default: 
+                    break;
+            }
+    },
+    onTap: function(pointer, doubleTap) {
+            // Calculate the corners of the menu
+            var x1 = 0, x2 = this.w,
+                y1 = this.h-this.heightButton, y2 = this.h;
+
+            var limitButton2 = 327;
+            var limitButton3 = 654;
+
+            // Check if the click was inside the menu
+            if(pointer.clientX > x1 && pointer.clientX < x2 && pointer.clientY > y1 && pointer.clientY < y2 ){
+                // The choicemap is an array that will help us see which item was clicked
+                var choise;
+
+                // Calculate the choice 
+                if(pointer.clientX<limitButton2){
+                    choise = 1;
+                } else if(pointer.clientX>=limitButton2 && pointer.clientX<=limitButton3){
+                    choise = 2;
+                } else if(pointer.clientX>limitButton3){
+                    choise = 3;
+                } else {
+                    choise = 0;
+                }
+                console.log(choise);
+                return(choise);
+            } else {
+                console.log("Tap out of menu: " + pointer.clientX + " - " + pointer.clientY);
+            }
     }
 
 };
 
     
     
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
+  var game = new Phaser.Game(981, 1550, Phaser.AUTO, '');
   game.state.add('Game',SurfGame,true);
   
   
