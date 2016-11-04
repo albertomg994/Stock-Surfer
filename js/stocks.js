@@ -7,6 +7,7 @@ function init_all_companies_stocks(companies_stocks, num_companies) {
     console.log("Generating stocks for company number " + i + " TOTAL COMPANIES: " + num_companies);
     var new_company_stocks = []
     init_company_stocks(new_company_stocks, 150);
+    
     companies_stocks.push(new_company_stocks);
   }
 }
@@ -26,5 +27,5 @@ function init_company_stocks(stock_values, num_values) {
  * Generates random value between [floor, roof] to be pushed into the stocks arrays
  */
 function generate_rand_int(floor, roof) {
-  return Math.floor((Math.random() * 100) + 1);
+  return Math.floor((Math.random() * 100) + 1)*3;
 }
