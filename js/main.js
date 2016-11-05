@@ -182,7 +182,7 @@ window.onload = function() {
           ini_y = this.all_companies_stock[j][i];
           fin_y = this.all_companies_stock[j][i+1];
           ini_x = i*this.PIXELS_PER_POINT;
-          fin_x = (i+1)*this;
+          fin_x = (i+1)*this.PIXELS_PER_POINT;
 
 
           // set a fill and line style
@@ -312,7 +312,7 @@ window.onload = function() {
 
     
     
-  var game = new Phaser.Game(961, 1550, Phaser.AUTO, '');
+  var game = new Phaser.Game(961, 1550, Phaser.CANVAS, '');
   game.state.add('Game',SurfGame,true);
   
   
