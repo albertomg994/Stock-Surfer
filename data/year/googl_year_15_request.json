@@ -1,0 +1,16 @@
+{
+  "Normalized" : false,
+  "StartDate": "2015-01-01T00:00:00-00",
+  "EndDate": "2015-12-31T23:59:59-00",
+  "DataPeriod": "Day",
+  "DataInterval" : 0,
+  "LabelPeriod" : "Day",
+  "LabelInterval" : 1,
+  "Elements" : [
+    {
+      "Symbol" : "GOOGL",
+      "Type" : "price",
+      "Params" : ["c"]
+    }
+  ]
+}
