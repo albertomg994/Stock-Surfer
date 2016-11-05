@@ -49,7 +49,7 @@ window.onload = function() {
      buttonsEnabled: true,
     
     preload: function(){
-         game.load.image('logo', 'phaser.png');
+         //game.load.image('logo', 'phaser.png');
          game.load.image('surfer','surfer.png');
          game.load.image('main-buttons', 'assets/sprites/main-buttons.png');
          game.load.image('main-buttons-grey', 'assets/sprites/main-buttons-grey.png');
@@ -72,8 +72,8 @@ window.onload = function() {
         game.input.onTap.add(this.onTap, this);
 
         //Put the logo on the background
-        var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
-        logo.anchor.setTo(0.5, 0.5);
+        //var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
+        //logo.anchor.setTo(0.5, 0.5);
         game.time.advancedTiming = true;
         
 
@@ -298,8 +298,7 @@ window.onload = function() {
          this.timeBarGraphics.drawRect(0, this.h-this.heightButton-50, (this.blockedCounter/this.TIME_PER_MOVEMENT)*961, 50);
          this.timeBarGraphics.endFill();
          this.blockedCounter-= 0.5;
-         
-         
+
      }
 
 };
