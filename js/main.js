@@ -206,6 +206,13 @@ window.onload = function() {
         var heightRightNow = this.all_companies_stock[this.activePlot][initialPoint] + percentageAdvancedSinceFirstPoint*heightDifference;
         return heightRightNow;
     },
+       getCurrentPoint: function(){
+        
+        var relativeAdvancedPixels = this.advancedPixels + this.X_OFFSET_OF_SURFER + this.SURFER_DIMENSIONS;
+        var initialPoint = Math.floor(relativeAdvancedPixels/this.PIXELS_PER_POINT);
+        return initialPoint;
+    },
+     
     changeButton: function(id, text){
             switch(id){
                 case 1:
