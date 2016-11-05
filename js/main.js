@@ -57,6 +57,7 @@ window.onload = function() {
      buttonsEnabled: true,
    date_text_sprite: undefined,
    date_text: undefined,
+     background: undefined,
     
     preload: function(){
          //game.load.image('logo', 'phaser.png');
@@ -64,9 +65,15 @@ window.onload = function() {
          game.load.image('main-buttons', 'assets/sprites/main-buttons.png');
          game.load.image('main-buttons-grey', 'assets/sprites/main-buttons-grey.png');
          game.load.image('try-again','assets/sprites/button-tryagain.png');
+         game.load.image('back','assets/back.png');
     },
     
     create: function () {
+        
+         //Put the logo on the background
+       // var background  = game.add.sprite(0, 0, 'back');
+        
+         background = game.add.tileSprite(0, 0, this.w, this.h, "back");
         // Add main buttons
         this.pic = game.add.sprite(0, this.h-this.heightButton, 'main-buttons');
         
@@ -79,13 +86,13 @@ window.onload = function() {
         this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, "GOOGL", { font: "54px Arial", fill: "#ffffff" });
         this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "MSFT", { font: "54px Arial", fill: "#ffffff" }); 
 
-        this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" }); 
+        this.points_title = game.add.text(this.w/2 - 90, 20,  "SCORE", { font: "50px Arial", fill: "#ffffff" }); 
+        this.points_text = game.add.text(this.w/2 - 30, 120,  0, { font: "99px Arial", fill: "#ffffff" });  //
 
 
         game.input.onTap.add(this.onTap, this);
 
-        //Put the logo on the background
-        //var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
+       
         //logo.anchor.setTo(0.5, 0.5);
         game.time.advancedTiming = true;
         
@@ -163,16 +170,16 @@ window.onload = function() {
         
         
         // código escrito por Alberto perfectamente formateado
-        date_text_sprite = game.add.sprite(0, 0);
+        //date_text_sprite = game.add.sprite(this.w / 2 - 100, this.h - this.heightButton - 300);
 
-
-        var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
-
-        date_text = game.add.text(0, 0, "", style);
-        date_text.anchor.set(0.5);
+       
+        
+      
     },
 
     update: function(){
+        
+        background.tilePosition.x -= 0.5;
          //Only draw the active plot
         for(var j = 0; j < this.numCompanies; j++){
             if(j==this.activePlot){
@@ -214,11 +221,16 @@ window.onload = function() {
         if(this.advancedPixels % this.PIXELS_PER_POINT == 0){
              var current_point = this.getCurrentPoint();
             dates = get_dates_list();
-            var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
+            //var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
 
-            date_text = game.add.text(0, 0, dates[current_point], style);
-            date_text.x = Math.floor(date_text_sprite.x + date_text_sprite.width / 2);
-            date_text.y = Math.floor(date_text_sprite.y + date_text_sprite.height / 2);
+            if(this.date_text){
+                this.date_text.destroy();
+            }
+            
+            this.date_text = game.add.text(this.w / 2 - 150, this.h - this.heightButton - 220, dates[current_point], { font: "64px Arial", fill: "#ffffff" });
+            //this.date_text = game.add.text(0, 0, dates[current_point], style);
+            //this.date_text.x = Math.floor(date_text_sprite.x + date_text_sprite.width / 2);
+            //this.date_text.y = Math.floor(date_text_sprite.y + date_text_sprite.height / 2);
         }
        
     },
@@ -250,7 +262,7 @@ window.onload = function() {
 
         
               // set a fill and line style
-          graphObject.beginFill(this.COLORS[j]);
+          graphObject.beginFill(this.COLORS[j],0.7);
           graphObject.lineStyle(0, this.COLORS[j], 1);
             
           if(ini_y < fin_y){ //Se esta bajando
@@ -308,7 +320,19 @@ window.onload = function() {
                     break;
                 default: 
                     this.points_text.destroy();
-                    this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" });
+                    //First we draw not visible to have the width
+                    var actual = this.getHeightOfSurfer();
+                    var text = this.points;
+                    if(actual < this.average){
+                        text = "↑ " + text;
+                    }
+                    else if(actual > this.average){
+                        text = "↓ " + text;
+                    }
+                    this.points_text = game.add.text(-100,-100,  text, { font: "99px Arial", fill: "#ffffff" }); 
+                    //Two times so points_text.width is correct
+                    this.points_text = game.add.text(this.w/2 - this.points_text.width/2, 120,  text, { font: "99px Arial", fill: "#ffffff" }); 
+                    //this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" });
                     break;
             }
     },
