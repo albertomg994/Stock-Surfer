@@ -18,6 +18,7 @@ window.onload = function() {
      X_OFFSET_OF_SURFER:50,
      LINE_WIDTH: 10,
      COLORS: [0x0000FF,0x00FF40,0xFF0000], //Blue, Green and Red
+     JUMP_HEIGHT: 600,
      
     // Measures and resolutions
     w: 961,
@@ -41,6 +42,7 @@ window.onload = function() {
     advancedPixels:0, //Number of pixels moved in the game,
     surferSlope:0,
     activePlot:0,
+     jumping:false,
     
     preload: function(){
          game.load.image('logo', 'phaser.png');
@@ -56,7 +58,7 @@ window.onload = function() {
 
         this.button_1_text = game.add.text(this.widthButton/4, this.h-this.heightButton/1.5, "APPL", { font: "54px Arial", fill: "#0000ff" });
         this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, "GOOGL", { font: "54px Arial", fill: "#00ff40" });
-        this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "YHOO", { font: "54px Arial", fill: "#ff0000" }); 
+        this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "MSFT", { font: "54px Arial", fill: "#ff0000" }); 
 
         game.input.onTap.add(this.onTap, this);
 
@@ -73,11 +75,16 @@ window.onload = function() {
         //Generate the sprite for the surfer
         this.surfer = game.add.sprite(this.X_OFFSET_OF_SURFER, 0, 'surfer');
         
+         // physics
+       this.physics.startSystem( Phaser.Physics.ARCADE );
         game.physics.arcade.enable([this.surfer]);
-
 	    game.physics.arcade.gravity.y = 200;
+        
+        
+        this.surfer.body.gravity.y = 500;
 
         this.surfer.body.allowGravity = false;
+       
            
         //C
         
@@ -123,10 +130,20 @@ window.onload = function() {
         this.advancedPixels+=this.GAME_SPEED;
         
         
-        this.surfer.y = this.getHeightOfSurfer() + this.Y_OFFSET_OF_GRAPH -this.SURFER_DIMENSIONS + 3;
-        //If goes down, sprite goes up 3 pixels (half of grosor of the linea)
-        if(this.surferSlope < 0){
-            this.surfer.y -=this.LINE_WIDTH / 2 ;
+        if(!this.jumping){
+            this.surfer.y = this.getHeightOfSurfer() + this.Y_OFFSET_OF_GRAPH -this.SURFER_DIMENSIONS + 3;
+            //If goes down, sprite goes up 3 pixels (half of grosor of the linea)
+            if(this.surferSlope < 0){
+                this.surfer.y -=this.LINE_WIDTH / 2 ;
+            }
+        }
+        
+        //Control end of jump
+        if(this.jumping && this.surfer.body.velocity.y > 0){
+            if(this.surfer.y >= this.getHeightOfSurfer() + this.Y_OFFSET_OF_GRAPH -this.SURFER_DIMENSIONS + 3){
+                this.jumping = false;
+                 this.surfer.body.allowGravity = false;
+            }
         }
     },
     render: function () {
@@ -225,6 +242,12 @@ window.onload = function() {
                 return(choise);
             } else {
                 console.log("Tap out of menu: " + pointer.clientX + " - " + pointer.clientY);
+                if(!this.jumping){
+                     this.surfer.body.allowGravity = true;
+                 this.surfer.body.velocity.y = -this.JUMP_HEIGHT;
+                 this.jumping = true;
+                }
+                
             }
 
     }
