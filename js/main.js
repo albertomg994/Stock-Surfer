@@ -18,7 +18,7 @@ window.onload = function() {
      X_OFFSET_OF_SURFER:50,
      LINE_WIDTH: 10,
      COLORS: [0x0000FF,0x00FF40,0xFF0000], //Blue, Green and Red
-     JUMP_HEIGHT: 600,
+     JUMP_HEIGHT: 700,
      TIME_PER_MOVEMENT: 5,
      POINTS_PER_GIFT: 40,
      
@@ -379,7 +379,7 @@ window.onload = function() {
         this.bonus_text = game.add.text(-100,-100,  "-" + value, { font: "60px Arial", fill: "#ffffff" }); 
         //Two times so points_text.width is correct
         
-        
+        this.points -= value;
         this.bonus_text = game.add.text(this.w/2 - this.bonus_text.width/2, 250,  "-" + value, { font: "60px Arial", fill: "#ff0000" }); 
        
        var self = this;
@@ -391,7 +391,7 @@ window.onload = function() {
         console.log("Collide with gift");
         this.bonus_text = game.add.text(-100,-100,  "+" + value, { font: "60px Arial", fill: "#ffffff" }); 
         //Two times so points_text.width is correct
-        
+        this.points += value;
         
         this.bonus_text = game.add.text(this.w/2 - this.bonus_text.width/2, 250,  "+" + value, { font: "60px Arial", fill: "#00ff00" }); 
        
@@ -474,10 +474,11 @@ window.onload = function() {
                 game.time.events.add(0, this.substractCounter, this);
                 
                
-                    
+                
                 
                 //Cambiar la activa
                 this.activePlot = choise - 1;
+                this.recalculateGifts();
                 //console.log(this.activePlot);
                 return(choise);
             }
@@ -492,6 +493,14 @@ window.onload = function() {
             }
 
     },
+     recalculateGifts: function(){
+         var max = 400;
+          var min = 200;
+         for(var i = 0; i < this.gifts.length; i++){
+             this.gifts[i].y = this.getHeightOfX(this.gifts[i].x) + this.Y_OFFSET_OF_GRAPH - (Math.floor(Math.random() * (max - min + 1)) + min);
+         }
+         
+     },
      substractCounter: function(){
          
          //Reprogram
