@@ -38,6 +38,7 @@ window.onload = function() {
     min: undefined,
     average: undefined,
     points: 0,
+    counter_points: 60,
 
     //Variables of the game
     pic: undefined,
@@ -107,8 +108,20 @@ window.onload = function() {
         
        
            
-        //C
-        
+        //Calculate the maximum and minimum values, and the average
+        this.max = this.all_companies_stock[0][0];
+        this.min = this.all_companies_stock[0][0];
+        for (var i = 0; i < 3; i++) {
+          // get max and min values
+          for (var j = 0; j < this.all_companies_stock[i].length; j++) {
+            if (this.all_companies_stock[i][j] > this.max) this.max = this.all_companies_stock[i][j];
+            if (this.all_companies_stock[i][j] < this.min) this.min = this.all_companies_stock[i][j];
+          }
+        }
+        this.average = (this.max - this.min) / 2;
+
+        console.log(this.max + " - " + this.min + " - " + this.average);
+
         //Generate the sprites for the plots
         for(var i = 0; i < this.numCompanies; i++){
             
@@ -367,22 +380,18 @@ window.onload = function() {
      },
 
      calculatePoints: function() {
-        this.max = this.all_companies_stock[this.activePlot][0];
-        this.min = this.all_companies_stock[this.activePlot][0];
-        // get max and min values
-        for (var i = 0; i < this.all_companies_stock[this.activePlot].length; i++) {
-          if (this.all_companies_stock[this.activePlot][i] > this.max) this.max = this.all_companies_stock[this.activePlot][i];
-          if (this.all_companies_stock[this.activePlot][i] < this.min) this.min = this.all_companies_stock[this.activePlot][i];
-        }
-        this.average = (this.max - this.min) / 2;
         var actual = this.getHeightOfSurfer();
-        console.log(actual);
+        //console.log(actual);
         if(actual>this.average){
           this.points = this.points + 2;
         } else if(actual<this.average){
           this.points = this.points - 2;
         }
-        this.changeButton(4, undefined);
+        if(this.counter_points==0){
+          this.changeButton(4, undefined);
+          this.counter_points = 60;
+        }
+        this.counter_points--;
      }
 
 };
