@@ -86,7 +86,8 @@ window.onload = function() {
         this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, "GOOGL", { font: "54px Arial", fill: "#ffffff" });
         this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "MSFT", { font: "54px Arial", fill: "#ffffff" }); 
 
-        this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" }); 
+        this.points_title = game.add.text(this.w/2 - 90, 20,  "SCORE", { font: "50px Arial", fill: "#ffffff" }); 
+        this.points_text = game.add.text(this.w/2 - 30, 120,  0, { font: "99px Arial", fill: "#ffffff" });  //
 
 
         game.input.onTap.add(this.onTap, this);
@@ -261,7 +262,7 @@ window.onload = function() {
 
         
               // set a fill and line style
-          graphObject.beginFill(this.COLORS[j]);
+          graphObject.beginFill(this.COLORS[j],0.7);
           graphObject.lineStyle(0, this.COLORS[j], 1);
             
           if(ini_y < fin_y){ //Se esta bajando
@@ -319,7 +320,19 @@ window.onload = function() {
                     break;
                 default: 
                     this.points_text.destroy();
-                    this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" });
+                    //First we draw not visible to have the width
+                    var actual = this.getHeightOfSurfer();
+                    var text = this.points;
+                    if(actual < this.average){
+                        text = "↑ " + text;
+                    }
+                    else if(actual > this.average){
+                        text = "↓ " + text;
+                    }
+                    this.points_text = game.add.text(-100,-100,  text, { font: "99px Arial", fill: "#ffffff" }); 
+                    //Two times so points_text.width is correct
+                    this.points_text = game.add.text(this.w/2 - this.points_text.width/2, 120,  text, { font: "99px Arial", fill: "#ffffff" }); 
+                    //this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" });
                     break;
             }
     },
