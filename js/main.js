@@ -12,7 +12,7 @@ window.onload = function() {
      
     //Constants
      PIXELS_PER_POINT: 30,
-     GAME_SPEED: 10,
+     GAME_SPEED: 1,
      Y_OFFSET_OF_GRAPH:400,
      SURFER_DIMENSIONS: 50,
      X_OFFSET_OF_SURFER:50,
