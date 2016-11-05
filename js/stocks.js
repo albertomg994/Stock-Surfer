@@ -78,7 +78,6 @@ function softened_random_value(previous_value) {
 
   // generate a big change in the value
   if (decision > 0 && decision <= 20) {
-    console.log("BIG change");
     var decision  = generate_rand_int(1, 100);
     var variation = generate_rand_int(1, xl_change_value);
     // add
@@ -92,7 +91,6 @@ function softened_random_value(previous_value) {
   }
   // generate a little change in the value
   else if (decision > 20 && decision <= 95) {
-    console.log("LITTLE change");
     var decision  = generate_rand_int(1, 100);
     var variation = generate_rand_int(1, xs_change_value);
     // increment the value
@@ -106,7 +104,6 @@ function softened_random_value(previous_value) {
   }
   // generate a completely random value
   else if (decision > 95) {
-    console.log("RANDOM VALUE");
     return generate_rand_int(200, 400);
   }
   
