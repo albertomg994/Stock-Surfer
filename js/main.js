@@ -20,7 +20,7 @@ window.onload = function() {
      COLORS: [0x0000FF,0x00FF40,0xFF0000], //Blue, Green and Red
      JUMP_HEIGHT: 700,
      TIME_PER_MOVEMENT: 5,
-     POINTS_PER_GIFT: 40,
+     POINTS_PER_GIFT: 35,
      
     // Measures and resolutions
     w: 961,
@@ -336,7 +336,7 @@ window.onload = function() {
     createRandomGift: function(){
           var x = this.w + 90;
          
-          var randomNumber = (Math.floor(Math.random() * (1 - 0 + 1)) + 0) //Number between 0 and 1. 
+          var randomNumber = (Math.floor(Math.random() * (2 - 0 + 2)) + 0) //Number between 0 and 1. 
           //0 means good
           //1 means bad
           var max = 400;
