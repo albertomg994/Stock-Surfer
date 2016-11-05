@@ -57,9 +57,9 @@ window.onload = function() {
         this.pic = game.add.sprite(0, this.h-this.heightButton, 'main-buttons');
         this.pic.scale.set(1);
 
-        this.button_1_text = game.add.text(this.widthButton/4, this.h-this.heightButton/1.5, "APPL", { font: "54px Arial", fill: "#0000ff" });
-        this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, "GOOGL", { font: "54px Arial", fill: "#00ff40" });
-        this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "MSFT", { font: "54px Arial", fill: "#ff0000" }); 
+        this.button_1_text = game.add.text(this.widthButton/4, this.h-this.heightButton/1.5, "APPL", { font: "54px Arial", fill: "#ffffff" });
+        this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, "GOOGL", { font: "54px Arial", fill: "#ffffff" });
+        this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "MSFT", { font: "54px Arial", fill: "#ffffff" }); 
 
         game.input.onTap.add(this.onTap, this);
 
