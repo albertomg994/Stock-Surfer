@@ -54,6 +54,8 @@ window.onload = function() {
      blockedCounter: 5,
      timeBarGraphics: undefined,
      buttonsEnabled: true,
+   date_text_sprite: undefined,
+   date_text: undefined,
     
     preload: function(){
          //game.load.image('logo', 'phaser.png');
@@ -128,9 +130,15 @@ window.onload = function() {
         }
         
         
-      
-       
+        
+        
+        // código escrito por Alberto perfectamente formateado
+        date_text_sprite = game.add.sprite(0, 0);
 
+        var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
+
+        date_text = game.add.text(0, 0, "", style);
+        date_text.anchor.set(0.5);
     },
 
     update: function(){
@@ -167,8 +175,16 @@ window.onload = function() {
                  this.surfer.body.allowGravity = false;
             }
         }
-
+        
         this.calculatePoints();
+        
+        // print date
+        var current_point = this.getCurrentPoint();
+        dates = get_dates_list();
+        var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
+        date_text = game.add.text(0, 0, dates[current_point], style);
+        date_text.x = Math.floor(date_text_sprite.x + date_text_sprite.width / 2);
+        date_text.y = Math.floor(date_text_sprite.y + date_text_sprite.height / 2);
     },
     render: function () {
         //xPosition++;
