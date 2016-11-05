@@ -46,7 +46,7 @@ window.onload = function() {
      blockedCounter: 6,
     
     preload: function(){
-         game.load.image('logo', 'phaser.png');
+         //game.load.image('logo', 'phaser.png');
          game.load.image('surfer','surfer.png');
          game.load.image('main-buttons', 'assets/sprites/main-buttons.png');
         
@@ -64,8 +64,8 @@ window.onload = function() {
         game.input.onTap.add(this.onTap, this);
 
         //Put the logo on the background
-        var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
-        logo.anchor.setTo(0.5, 0.5);
+        //var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
+        //logo.anchor.setTo(0.5, 0.5);
         game.time.advancedTiming = true;
         
 
@@ -242,7 +242,7 @@ window.onload = function() {
                 
                 //Cambiar la activa
                 this.activePlot = choise - 1;
-                console.log(this.activePlot);
+                //console.log(this.activePlot);
                 return(choise);
             } else {
                 
@@ -258,7 +258,7 @@ window.onload = function() {
      substractCounter: function(){
          this.blockedCounter-= 0.5;
          game.time.events.add(500, this.substractCounter, this);
-         console.log(this.blockedCounter);
+         //console.log(this.blockedCounter);
      }
 
 };
