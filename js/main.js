@@ -71,7 +71,9 @@ window.onload = function() {
 
         game.time.events.add(500, this.substractCounter, this);
         //Init data of all stocks
-        init_all_companies_stocks(this.all_companies_stock,this.numCompanies);
+        //init_all_companies_stocks(this.all_companies_stock,this.numCompanies);
+        load_year_stock_values(this.all_companies_stock, true);  // load from JSON
+
 
         
         //Generate the sprite for the surfer
