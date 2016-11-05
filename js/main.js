@@ -46,17 +46,23 @@ window.onload = function() {
      jumping:false,
      blockedCounter: 5,
      timeBarGraphics: undefined,
+     buttonsEnabled: true,
     
     preload: function(){
          game.load.image('logo', 'phaser.png');
          game.load.image('surfer','surfer.png');
          game.load.image('main-buttons', 'assets/sprites/main-buttons.png');
+         game.load.image('main-buttons-grey', 'assets/sprites/main-buttons-grey.png');
         
     },
     
     create: function () {
         // Add main buttons
         this.pic = game.add.sprite(0, this.h-this.heightButton, 'main-buttons');
+        
+
+
+       
         this.pic.scale.set(1);
 
         this.button_1_text = game.add.text(this.widthButton/4, this.h-this.heightButton/1.5, "APPL", { font: "54px Arial", fill: "#ffffff" });
@@ -71,7 +77,7 @@ window.onload = function() {
         game.time.advancedTiming = true;
         
 
-        game.time.events.add(500, this.substractCounter, this);
+        //game.time.events.add(500, this.substractCounter, this);
         //Init data of all stocks
         //init_all_companies_stocks(this.all_companies_stock,this.numCompanies);
         load_year_stock_values(this.all_companies_stock, true);  // load from JSON
@@ -229,6 +235,7 @@ window.onload = function() {
             // Check if the click was inside the menu
             if(pointer.clientX > x1 && pointer.clientX < x2 && pointer.clientY > y1 && pointer.clientY < y2 ){
                 // The choicemap is an array that will help us see which item was clicked
+                 if(this.buttonsEnabled){
                 var choise;
 
                 // Calculate the choice 
@@ -242,10 +249,19 @@ window.onload = function() {
                     choise = 0;
                 }
                 
+                this.buttonsEnabled = false;
+                this.pic.loadTexture('main-buttons-grey',0);
+                this.blockedCounter = this.TIME_PER_MOVEMENT;
+                game.time.events.add(0, this.substractCounter, this);
+                
+               
+                    
+                
                 //Cambiar la activa
                 this.activePlot = choise - 1;
-                console.log(this.activePlot);
+                //console.log(this.activePlot);
                 return(choise);
+            }
             } else {
                 
                 if(!this.jumping){
@@ -258,9 +274,19 @@ window.onload = function() {
 
     },
      substractCounter: function(){
-         this.blockedCounter-= 0.5;
-         game.time.events.add(500, this.substractCounter, this);
-         console.log(this.blockedCounter);
+         
+         //Reprogram
+         if(this.blockedCounter > 0){
+             game.time.events.add(500, this.substractCounter, this);
+             
+         }
+         
+         //Restore
+         if(this.blockedCounter <= 0){
+             this.buttonsEnabled = true;
+             this.pic.loadTexture('main-buttons',0);
+         }
+         
          if(this.timeBarGraphics){
              this.timeBarGraphics.destroy();
          }
@@ -271,6 +297,9 @@ window.onload = function() {
          console.log(this.blockedCounter/this.TIME_PER_MOVEMENT);
          this.timeBarGraphics.drawRect(0, this.h-this.heightButton-50, (this.blockedCounter/this.TIME_PER_MOVEMENT)*961, 50);
          this.timeBarGraphics.endFill();
+         this.blockedCounter-= 0.5;
+         
+         
      }
 
 };
