@@ -152,7 +152,7 @@ window.onload = function() {
         }
         
         //Generate the line of the mean
-        var g = game.add.graphics(0,this.Y_OFFSET_OF_GRAPH+this.average);
+        var g = game.add.graphics(0,this.Y_OFFSET_OF_GRAPH);
         g.beginFill(0x000000);
         g.lineStyle(5, 0xFFFFFF, 1);
         g.moveTo(0,this.average);
@@ -170,7 +170,11 @@ window.onload = function() {
         this.surfer.body.allowGravity = false;
       
        
-        this.createRandomGift();
+        //Only if lastPoint is far than this.w + 90
+        ///if((this.all_companies_stock[0].length-1)*this.PIXELS_PER_POINT - this.advancedPixeles > this.w + 90){
+          this.createRandomGift();  
+        //}
+        
 
         
         
