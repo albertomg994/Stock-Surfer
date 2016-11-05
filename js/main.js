@@ -139,6 +139,16 @@ window.onload = function() {
             
         }
         
+        //Generate the line of the mean
+        var g = game.add.graphics(0,this.average);
+        g.beginFill(0x000000);
+        g.lineStyle(5, 0xFFFFFF, 1);
+        g.moveTo(0,this.average);
+        console.log(this.average);
+        g.lineTo(this.w,this.average);
+        g.endFill();
+            
+        
 
          //Generate the sprite for the surfer
         this.surfer = game.add.sprite(this.X_OFFSET_OF_SURFER, 0, 'surfer');
@@ -382,11 +392,9 @@ window.onload = function() {
      calculatePoints: function() {
         var actual = this.getHeightOfSurfer();
         //console.log(actual);
-        if(actual>this.average){
-          this.points = this.points + 2;
-        } else if(actual<this.average){
-          this.points = this.points - 2;
-        }
+         
+         this.points = Math.floor(this.points + (this.average - actual)/100);
+        
         if(this.counter_points==0){
           this.changeButton(4, undefined);
           this.counter_points = 60;
