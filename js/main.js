@@ -12,7 +12,7 @@ window.onload = function() {
      
     //Constants
      PIXELS_PER_POINT: 30,
-     GAME_SPEED: 1,
+     GAME_SPEED: 3,
      Y_OFFSET_OF_GRAPH:400,
      SURFER_DIMENSIONS: 50,
      X_OFFSET_OF_SURFER:50,
@@ -20,6 +20,7 @@ window.onload = function() {
      COLORS: [0x0000FF,0x00FF40,0xFF0000], //Blue, Green and Red
      JUMP_HEIGHT: 600,
      TIME_PER_MOVEMENT: 5,
+     POINTS_PER_GIFT: 40,
      
     // Measures and resolutions
     w: 961,
@@ -58,6 +59,7 @@ window.onload = function() {
    date_text_sprite: undefined,
    date_text: undefined,
      background: undefined,
+     gifts: new Array(),
     
     preload: function(){
          //game.load.image('logo', 'phaser.png');
@@ -65,6 +67,8 @@ window.onload = function() {
          game.load.image('main-buttons', 'assets/sprites/main-buttons.png');
          game.load.image('main-buttons-grey', 'assets/sprites/main-buttons-grey.png');
          game.load.image('back','assets/back.png');
+         game.load.image('gift','assets/sprites/gift.png');
+        game.load.image('badGift','assets/sprites/badGift.png');
         
     },
     
@@ -165,6 +169,7 @@ window.onload = function() {
         this.surfer.body.allowGravity = false;
       
        
+        this.createRandomGift();
 
         
         
@@ -178,6 +183,12 @@ window.onload = function() {
     },
 
     update: function(){
+        
+        
+        for(var j = 0; j < this.gifts.length; j++){
+            game.physics.arcade.collide(this.surfer, this.gifts[j], this.collisionHandler, null, this);
+        }
+        
         
         background.tilePosition.x -= 0.5;
          //Only draw the active plot
@@ -197,6 +208,10 @@ window.onload = function() {
         }
         this.advancedPixels+=this.GAME_SPEED;
         
+        
+        if(this.advancedPixels%(this.PIXELS_PER_POINT*this.POINTS_PER_GIFT)==0){
+            this.createRandomGift();
+        }
         
         if(!this.jumping){
             this.surfer.y = this.getHeightOfSurfer() + this.Y_OFFSET_OF_GRAPH -this.SURFER_DIMENSIONS + 3;
@@ -231,6 +246,10 @@ window.onload = function() {
             //this.date_text = game.add.text(0, 0, dates[current_point], style);
             //this.date_text.x = Math.floor(date_text_sprite.x + date_text_sprite.width / 2);
             //this.date_text.y = Math.floor(date_text_sprite.y + date_text_sprite.height / 2);
+        }
+        
+        for(var k = 0; k < this.gifts.length;k++ ){
+            this.gifts[k].x -= this.GAME_SPEED;
         }
        
     },
@@ -297,7 +316,94 @@ window.onload = function() {
         var heightRightNow = this.all_companies_stock[this.activePlot][initialPoint] + percentageAdvancedSinceFirstPoint*heightDifference;
         return heightRightNow;
     },
-       getCurrentPoint: function(){
+    getHeightOfX: function(x){
+        
+        var relativeAdvancedPixels = this.advancedPixels + x;
+        var initialPoint = Math.floor(relativeAdvancedPixels/this.PIXELS_PER_POINT);
+        var finalPoint = initialPoint + 1;
+        var pixelsAdvancedSinceFirstPoint = (relativeAdvancedPixels - initialPoint*this.PIXELS_PER_POINT);
+        var percentageAdvancedSinceFirstPoint = (pixelsAdvancedSinceFirstPoint/this.PIXELS_PER_POINT);
+        var heightDifference = this.all_companies_stock[this.activePlot][finalPoint] - this.all_companies_stock[this.activePlot][initialPoint];
+        this.surferSlope = -(heightDifference); //So if goes down, slope is negative
+        var heightRightNow = this.all_companies_stock[this.activePlot][initialPoint] + percentageAdvancedSinceFirstPoint*heightDifference;
+        return heightRightNow;
+    },
+    createRandomGift: function(){
+          var x = this.w + 90;
+         
+          var randomNumber = (Math.floor(Math.random() * (1 - 0 + 1)) + 0) //Number between 0 and 1. 
+          //0 means good
+          //1 means bad
+          var max = 400;
+          var min = 200;
+          var sprite = 'gift';
+          var name = 'gift';
+
+          if(randomNumber != 0){
+              //Bad, different numbers
+              max = 90;
+              min = 90;
+              sprite = 'badGift';
+              name = 'badGift';
+          }
+          var y = this.getHeightOfX(x) + this.Y_OFFSET_OF_GRAPH - (Math.floor(Math.random() * (max - min + 1)) + min);
+        
+          console.log("Printing gift at " + x + "," + y);
+          var gift = game.add.sprite(x,y, sprite);
+        gift.name = name;
+        game.physics.enable( gift, Phaser.Physics.ARCADE);
+         gift.body.allowGravity = false;
+        this.gifts.push(gift);
+    },
+     collisionHandler: function(obj1,obj2) {
+
+  
+    //Generate the value of th egift
+    var value = (Math.floor(Math.random() * (2000 - 10 + 1)) + 10);
+    if(obj1.name == 'badGift' || obj1.name == 'gift'){
+        obj1.visible = false;
+        obj1.destroy();
+      
+    }
+         
+   if(obj2.name == 'badGift' || obj2.name == 'gift'){
+        obj2.visible = false;
+        obj2.destroy();
+      
+        
+    }
+         
+    if(obj1.name == 'badGift' || obj2.name == 'badGift'){
+        console.log("Collide with badGift");
+        this.bonus_text = game.add.text(-100,-100,  "-" + value, { font: "60px Arial", fill: "#ffffff" }); 
+        //Two times so points_text.width is correct
+        
+        
+        this.bonus_text = game.add.text(this.w/2 - this.bonus_text.width/2, 250,  "-" + value, { font: "60px Arial", fill: "#ff0000" }); 
+       
+       var self = this;
+       //this.date_text = game.add.text(obj2.x,obj2.y, "+100", { font: "64px Arial", fill: "#ffffff" });
+        game.time.events.add(1000, function(){self.bonus_text.visible = false;}, this);
+    }
+         
+    if(obj1.name == 'gift' || obj2.name == 'gift'){
+        console.log("Collide with gift");
+        this.bonus_text = game.add.text(-100,-100,  "+" + value, { font: "60px Arial", fill: "#ffffff" }); 
+        //Two times so points_text.width is correct
+        
+        
+        this.bonus_text = game.add.text(this.w/2 - this.bonus_text.width/2, 250,  "+" + value, { font: "60px Arial", fill: "#00ff00" }); 
+       
+       var self = this;
+       //this.date_text = game.add.text(obj2.x,obj2.y, "+100", { font: "64px Arial", fill: "#ffffff" });
+        game.time.events.add(1000, function(){self.bonus_text.visible = false;}, this);
+    }
+    //  The two sprites are colliding
+         //console.log("colide");
+    //game.stage.backgroundColor = '#992d2d';
+
+},
+    getCurrentPoint: function(){
         
         var relativeAdvancedPixels = this.advancedPixels + this.X_OFFSET_OF_SURFER + this.SURFER_DIMENSIONS;
         var initialPoint = Math.floor(relativeAdvancedPixels/this.PIXELS_PER_POINT);
