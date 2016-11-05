@@ -15,9 +15,10 @@ function load_year_stock_values(all_companies_stocks, fake) {
     ];
 
     for (var i = 0; i < all_companies_stocks.length; i++) {
-      for (var j = 0; j < all_companies_stocks[i].length; j++) {
+      /*for (var j = 0; j < all_companies_stocks[i].length; j++) {
         all_companies_stocks[i][j] = all_companies_stocks[i][j]*100;
-      }
+      }*/
+      normalize_stock_values(all_companies_stocks[i]);
     }
   }
   else {
@@ -63,4 +64,23 @@ function loadJSON(file_path, callback) {
       }
     };
     xobj.send(null);
- }
+}
+
+function normalize_stock_values(stock_values) {
+  var max = stock_values[0]
+  var min = stock_values[0]
+  // get max and min values
+  for (var i = 0; i < stock_values.length; i++) {
+    if (stock_values[i] > max) max = stock_values[i];
+    if (stock_values[i] < min) min = stock_values[i];
+  }
+
+  var value_per_point = 600 / (max-min);
+
+  // reassign values
+  for (var i = 0; i < stock_values.length; i++) {
+    original_value = stock_values[i];
+    new_value = (original_value - min) * value_per_point;
+    stock_values[i] = new_value;
+  }
+}
