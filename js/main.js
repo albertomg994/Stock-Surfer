@@ -13,7 +13,7 @@ window.onload = function() {
     //Constants
      PIXELS_PER_POINT: 30,
      GAME_SPEED: 1,
-     Y_OFFSET_OF_GRAPH:400,
+     Y_OFFSET_OF_GRAPH: 400,
      SURFER_DIMENSIONS: 50,
      X_OFFSET_OF_SURFER:50,
      LINE_WIDTH: 10,
@@ -100,7 +100,7 @@ window.onload = function() {
         //game.time.events.add(500, this.substractCounter, this);
         //Init data of all stocks
         //init_all_companies_stocks(this.all_companies_stock,this.numCompanies);
-        load_year_stock_values(this.all_companies_stock, true);  // load from JSON
+        load_stock_values(this.all_companies_stock, 'random');  // load from JSON
 
 
         
@@ -147,7 +147,7 @@ window.onload = function() {
         }
         
         //Generate the line of the mean
-        var g = game.add.graphics(0,this.average);
+        var g = game.add.graphics(0,this.Y_OFFSET_OF_GRAPH+this.average);
         g.beginFill(0x000000);
         g.lineStyle(5, 0xFFFFFF, 1);
         g.moveTo(0,this.average);
