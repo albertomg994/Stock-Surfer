@@ -32,13 +32,6 @@ window.onload = function() {
     button_2_text: undefined,
     button_3_text: undefined,
 
-    // 
-    points_text: undefined,
-    max: undefined,
-    min: undefined,
-    average: undefined,
-    points: 0,
-
     //Variables of the game
     pic: undefined,
     stockValues: new Array(),
@@ -54,8 +47,6 @@ window.onload = function() {
      blockedCounter: 5,
      timeBarGraphics: undefined,
      buttonsEnabled: true,
-   date_text_sprite: undefined,
-   date_text: undefined,
     
     preload: function(){
          //game.load.image('logo', 'phaser.png');
@@ -78,9 +69,6 @@ window.onload = function() {
         this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, "GOOGL2", { font: "54px Arial", fill: "#ffffff" });
         this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "MSFT", { font: "54px Arial", fill: "#ffffff" }); 
 
-        this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" }); 
-
-
         game.input.onTap.add(this.onTap, this);
 
         //Put the logo on the background
@@ -96,15 +84,18 @@ window.onload = function() {
 
 
         
-       
+        //Generate the sprite for the surfer
+        this.surfer = game.add.sprite(this.X_OFFSET_OF_SURFER, 0, 'surfer');
         
          // physics
        this.physics.startSystem( Phaser.Physics.ARCADE );
-        
+        game.physics.arcade.enable([this.surfer]);
 	    game.physics.arcade.gravity.y = 200;
         
         
-        
+        this.surfer.body.gravity.y = 500;
+
+        this.surfer.body.allowGravity = false;
        
            
         //C
@@ -126,27 +117,10 @@ window.onload = function() {
             
         }
         
-
-         //Generate the sprite for the surfer
-        this.surfer = game.add.sprite(this.X_OFFSET_OF_SURFER, 0, 'surfer');
-        game.physics.arcade.enable([this.surfer]);
-        this.surfer.body.gravity.y = 500;
-
-        this.surfer.body.allowGravity = false;
+        
       
        
 
-        
-        
-        
-        // código escrito por Alberto perfectamente formateado
-        date_text_sprite = game.add.sprite(0, 0);
-
-
-        var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
-
-        date_text = game.add.text(0, 0, "", style);
-        date_text.anchor.set(0.5);
     },
 
     update: function(){
@@ -183,16 +157,6 @@ window.onload = function() {
                  this.surfer.body.allowGravity = false;
             }
         }
-        
-        this.calculatePoints();
-        
-        // print date
-        var current_point = this.getCurrentPoint();
-        dates = get_dates_list();
-        var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
-        date_text = game.add.text(0, 0, dates[current_point], style);
-        date_text.x = Math.floor(date_text_sprite.x + date_text_sprite.width / 2);
-        date_text.y = Math.floor(date_text_sprite.y + date_text_sprite.height / 2);
     },
     render: function () {
         //xPosition++;
@@ -220,29 +184,14 @@ window.onload = function() {
           ini_x = i*this.PIXELS_PER_POINT;
           fin_x = (i+1)*this.PIXELS_PER_POINT;
 
-        
-              // set a fill and line style
-          graphObject.beginFill(this.COLORS[j]);
-          graphObject.lineStyle(0, this.COLORS[j], 1);
-            
-          if(ini_y < fin_y){ //Se esta bajando
-              
-               graphObject.drawRect(ini_x, fin_y, (fin_x - ini_x), this.h - this.heightButton - 400 -  fin_y);
-               graphObject.drawTriangle([ new Phaser.Point(fin_x, fin_y), new Phaser.Point(ini_x,fin_y), new Phaser.Point(ini_x, ini_y) ]);
-               //graphObject.drawPolygon(poly.points);
-          }
-          else{ //Se esta subiendo
-               graphObject.drawRect(ini_x, ini_y, (fin_x - ini_x), this.h - this.heightButton - 400 -  ini_y);
-               graphObject.drawTriangle([  new Phaser.Point(fin_x, ini_y),new Phaser.Point(ini_x,ini_y), new Phaser.Point(fin_x, fin_y) ]);
-          }
-            
-           
-        
-        
+
+          // set a fill and line style
+          graphObject.beginFill(0xFF3300);
+          graphObject.lineStyle(this.LINE_WIDTH, this.COLORS[j], 1);
 
           // draw a shape
           graphObject.moveTo(ini_x, ini_y);
-          //graphObject.lineTo(fin_x, fin_y);
+          graphObject.lineTo(fin_x, fin_y);
     }
     },
     getHeightOfSurfer: function(){
@@ -279,8 +228,6 @@ window.onload = function() {
                     this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, text, { font: "54px Arial", fill: "#ffffff" });
                     break;
                 default: 
-                    this.points_text.destroy();
-                    this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" });
                     break;
             }
     },
@@ -355,29 +302,10 @@ window.onload = function() {
          this.timeBarGraphics.beginFill(0x00FF00);
          this.timeBarGraphics.lineStyle(5, 0xFFFFFF, 1);
          console.log(this.blockedCounter/this.TIME_PER_MOVEMENT);
-         this.timeBarGraphics.drawRect(0, this.h-this.heightButton-50, (1-this.blockedCounter/this.TIME_PER_MOVEMENT)*961, 50);
+         this.timeBarGraphics.drawRect(0, this.h-this.heightButton-50, (this.blockedCounter/this.TIME_PER_MOVEMENT)*961, 50);
          this.timeBarGraphics.endFill();
          this.blockedCounter-= 0.5;
 
-     },
-
-     calculatePoints: function() {
-        this.max = this.all_companies_stock[this.activePlot][0];
-        this.min = this.all_companies_stock[this.activePlot][0];
-        // get max and min values
-        for (var i = 0; i < this.all_companies_stock[this.activePlot].length; i++) {
-          if (this.all_companies_stock[this.activePlot][i] > this.max) this.max = this.all_companies_stock[this.activePlot][i];
-          if (this.all_companies_stock[this.activePlot][i] < this.min) this.min = this.all_companies_stock[this.activePlot][i];
-        }
-        this.average = (this.max - this.min) / 2;
-        var actual = this.getHeightOfSurfer();
-        console.log(actual);
-        if(actual>this.average){
-          this.points = this.points + 2;
-        } else if(actual<this.average){
-          this.points = this.points - 2;
-        }
-        this.changeButton(4, undefined);
      }
 
 };
