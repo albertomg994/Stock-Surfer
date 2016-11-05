@@ -187,12 +187,17 @@ window.onload = function() {
         this.calculatePoints();
         
         // print date
-        var current_point = this.getCurrentPoint();
-        dates = get_dates_list();
-        var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
-        date_text = game.add.text(0, 0, dates[current_point], style);
-        date_text.x = Math.floor(date_text_sprite.x + date_text_sprite.width / 2);
-        date_text.y = Math.floor(date_text_sprite.y + date_text_sprite.height / 2);
+        //But only every PIXELS_PER_POINT pixels, every time the day changes
+        if(this.advancedPixels % this.PIXELS_PER_POINT == 0){
+             var current_point = this.getCurrentPoint();
+            dates = get_dates_list();
+            var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
+
+            date_text = game.add.text(0, 0, dates[current_point], style);
+            date_text.x = Math.floor(date_text_sprite.x + date_text_sprite.width / 2);
+            date_text.y = Math.floor(date_text_sprite.y + date_text_sprite.height / 2);
+        }
+       
     },
     render: function () {
         //xPosition++;
