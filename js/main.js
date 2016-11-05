@@ -70,6 +70,7 @@ window.onload = function() {
          game.load.image('back','assets/back.png');
          game.load.image('gift','assets/sprites/gift.png');
         game.load.image('badGift','assets/sprites/badGift.png');
+        game.load.audio('music', ['assets/music.mp3']);
 
     },
     
@@ -83,6 +84,9 @@ window.onload = function() {
         this.pic = game.add.sprite(0, this.h-this.heightButton, 'main-buttons');
         
 
+        var music = game.add.audio('music');
+
+    music.play();
 
        
         this.pic.scale.set(1);
