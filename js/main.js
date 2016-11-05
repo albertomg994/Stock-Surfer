@@ -11,7 +11,7 @@ window.onload = function() {
 
      
     //Constants
-     PIXELS_PER_POINT: 10,
+     PIXELS_PER_POINT: 30,
      GAME_SPEED: 1,
      Y_OFFSET_OF_GRAPH:400,
      SURFER_DIMENSIONS: 50,
@@ -182,7 +182,7 @@ window.onload = function() {
           ini_y = this.all_companies_stock[j][i];
           fin_y = this.all_companies_stock[j][i+1];
           ini_x = i*this.PIXELS_PER_POINT;
-          fin_x = (i+1)*this.PIXELS_PER_POINT;
+          fin_x = (i+1)*this;
 
 
           // set a fill and line style
