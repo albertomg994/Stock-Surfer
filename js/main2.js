@@ -32,13 +32,6 @@ window.onload = function() {
     button_2_text: undefined,
     button_3_text: undefined,
 
-    // 
-    points_text: undefined,
-    max: undefined,
-    min: undefined,
-    average: undefined,
-    points: 0,
-
     //Variables of the game
     pic: undefined,
     stockValues: new Array(),
@@ -75,9 +68,6 @@ window.onload = function() {
         this.button_1_text = game.add.text(this.widthButton/4, this.h-this.heightButton/1.5, "APPL", { font: "54px Arial", fill: "#ffffff" });
         this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, "GOOGL2", { font: "54px Arial", fill: "#ffffff" });
         this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "MSFT", { font: "54px Arial", fill: "#ffffff" }); 
-
-        this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" }); 
-
 
         game.input.onTap.add(this.onTap, this);
 
@@ -167,8 +157,6 @@ window.onload = function() {
                  this.surfer.body.allowGravity = false;
             }
         }
-
-        this.calculatePoints();
     },
     render: function () {
         //xPosition++;
@@ -240,8 +228,6 @@ window.onload = function() {
                     this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, text, { font: "54px Arial", fill: "#ffffff" });
                     break;
                 default: 
-                    this.points_text.destroy();
-                    this.points_text = game.add.text(this.w-this.widthButton, 100, "Points: " + this.points, { font: "54px Arial", fill: "#ffffff" });
                     break;
             }
     },
@@ -320,25 +306,6 @@ window.onload = function() {
          this.timeBarGraphics.endFill();
          this.blockedCounter-= 0.5;
 
-     },
-
-     calculatePoints: function() {
-        this.max = this.all_companies_stock[this.activePlot][0];
-        this.min = this.all_companies_stock[this.activePlot][0];
-        // get max and min values
-        for (var i = 0; i < this.all_companies_stock[this.activePlot].length; i++) {
-          if (this.all_companies_stock[this.activePlot][i] > this.max) this.max = this.all_companies_stock[this.activePlot][i];
-          if (this.all_companies_stock[this.activePlot][i] < this.min) this.min = this.all_companies_stock[this.activePlot][i];
-        }
-        this.average = (this.max - this.min) / 2;
-        var actual = this.getHeightOfSurfer();
-        console.log(actual);
-        if(actual>this.average){
-          this.points = this.points + 2;
-        } else if(actual<this.average){
-          this.points = this.points - 2;
-        }
-        this.changeButton(4, undefined);
      }
 
 };
