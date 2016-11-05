@@ -16,7 +16,7 @@ function load_year_stock_values(all_companies_stocks, fake) {
 
     for (var i = 0; i < all_companies_stocks.length; i++) {
       for (var j = 0; j < all_companies_stocks[i].length; j++) {
-        all_companies_stocks[i][j] = all_companies_stocks[i][j]*100;
+        all_companies_stocks[i][j] = all_companies_stocks[i][j]*10;
       }
     }
   }
