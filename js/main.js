@@ -19,6 +19,7 @@ window.onload = function() {
      LINE_WIDTH: 10,
      COLORS: [0x0000FF,0x00FF40,0xFF0000], //Blue, Green and Red
      JUMP_HEIGHT: 600,
+     TIME_PER_MOVEMENT: 5,
      
     // Measures and resolutions
     w: 961,
@@ -43,7 +44,8 @@ window.onload = function() {
     surferSlope:0,
     activePlot:0,
      jumping:false,
-     blockedCounter: 6,
+     blockedCounter: 5,
+     timeBarGraphics: undefined,
     
     preload: function(){
          game.load.image('logo', 'phaser.png');
@@ -259,6 +261,16 @@ window.onload = function() {
          this.blockedCounter-= 0.5;
          game.time.events.add(500, this.substractCounter, this);
          console.log(this.blockedCounter);
+         if(this.timeBarGraphics){
+             this.timeBarGraphics.destroy();
+         }
+         this.timeBarGraphics = game.add.graphics(0, 0);
+          // set a fill and line style
+         this.timeBarGraphics.beginFill(0x00FF00);
+         this.timeBarGraphics.lineStyle(5, 0xFFFFFF, 1);
+         console.log(this.blockedCounter/this.TIME_PER_MOVEMENT);
+         this.timeBarGraphics.drawRect(0, this.h-this.heightButton-50, (this.blockedCounter/this.TIME_PER_MOVEMENT)*961, 50);
+         this.timeBarGraphics.endFill();
      }
 
 };
