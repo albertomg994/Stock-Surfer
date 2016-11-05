@@ -84,18 +84,15 @@ window.onload = function() {
 
 
         
-        //Generate the sprite for the surfer
-        this.surfer = game.add.sprite(this.X_OFFSET_OF_SURFER, 0, 'surfer');
+       
         
          // physics
        this.physics.startSystem( Phaser.Physics.ARCADE );
-        game.physics.arcade.enable([this.surfer]);
+        
 	    game.physics.arcade.gravity.y = 200;
         
         
-        this.surfer.body.gravity.y = 500;
-
-        this.surfer.body.allowGravity = false;
+        
        
            
         //C
@@ -117,7 +114,12 @@ window.onload = function() {
             
         }
         
-        
+         //Generate the sprite for the surfer
+        this.surfer = game.add.sprite(this.X_OFFSET_OF_SURFER, 0, 'surfer');
+        game.physics.arcade.enable([this.surfer]);
+        this.surfer.body.gravity.y = 500;
+
+        this.surfer.body.allowGravity = false;
       
        
 
@@ -184,14 +186,29 @@ window.onload = function() {
           ini_x = i*this.PIXELS_PER_POINT;
           fin_x = (i+1)*this.PIXELS_PER_POINT;
 
-
-          // set a fill and line style
-          graphObject.beginFill(0xFF3300);
-          graphObject.lineStyle(this.LINE_WIDTH, this.COLORS[j], 1);
+        
+              // set a fill and line style
+          graphObject.beginFill(this.COLORS[j]);
+          graphObject.lineStyle(0, this.COLORS[j], 1);
+            
+          if(ini_y < fin_y){ //Se esta bajando
+              
+               graphObject.drawRect(ini_x, fin_y, (fin_x - ini_x), this.h - this.heightButton - 400 -  fin_y);
+               graphObject.drawTriangle([ new Phaser.Point(fin_x, fin_y), new Phaser.Point(ini_x,fin_y), new Phaser.Point(ini_x, ini_y) ]);
+               //graphObject.drawPolygon(poly.points);
+          }
+          else{ //Se esta subiendo
+               graphObject.drawRect(ini_x, ini_y, (fin_x - ini_x), this.h - this.heightButton - 400 -  ini_y);
+               graphObject.drawTriangle([  new Phaser.Point(fin_x, ini_y),new Phaser.Point(ini_x,ini_y), new Phaser.Point(fin_x, fin_y) ]);
+          }
+            
+           
+        
+        
 
           // draw a shape
           graphObject.moveTo(ini_x, ini_y);
-          graphObject.lineTo(fin_x, fin_y);
+          //graphObject.lineTo(fin_x, fin_y);
     }
     },
     getHeightOfSurfer: function(){
@@ -302,7 +319,7 @@ window.onload = function() {
          this.timeBarGraphics.beginFill(0x00FF00);
          this.timeBarGraphics.lineStyle(5, 0xFFFFFF, 1);
          console.log(this.blockedCounter/this.TIME_PER_MOVEMENT);
-         this.timeBarGraphics.drawRect(0, this.h-this.heightButton-50, (this.blockedCounter/this.TIME_PER_MOVEMENT)*961, 50);
+         this.timeBarGraphics.drawRect(0, this.h-this.heightButton-50, (1-this.blockedCounter/this.TIME_PER_MOVEMENT)*961, 50);
          this.timeBarGraphics.endFill();
          this.blockedCounter-= 0.5;
 
