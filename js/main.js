@@ -8,14 +8,30 @@ window.onload = function() {
     
  SurfGame.prototype = {
 
+
      
     //Constants
      PIXELS_PER_POINT: 100,
      GAME_SPEED: 1,
-     Y_OFFSET_OF_GRAPH:200,
+     Y_OFFSET_OF_GRAPH:400,
      SURFER_DIMENSIONS: 50,
-     X_OFFSET_OF_SURFER:30,
+     X_OFFSET_OF_SURFER:50,
+     LINE_WIDTH: 10,
+     COLORS: [0x0000FF,0x00FF40,0xFF0000], //Blue, Green and Red
+     
+    // Measures and resolutions
+    w: 961,
+    h: 1550,
+    heightButton: 200,
+    widthButton: 327,
+
+    // Text buttons variables
+    button_1_text: undefined,
+    button_2_text: undefined,
+    button_3_text: undefined,
+
     //Variables of the game
+    pic: undefined,
     stockValues: new Array(),
     numCompanies: 3,
     all_companies_stock: new Array(),
@@ -24,33 +40,46 @@ window.onload = function() {
     surfer:undefined,
     advancedPixels:0, //Number of pixels moved in the game,
     surferSlope:0,
+    activePlot:0,
     
     preload: function(){
          game.load.image('logo', 'phaser.png');
          game.load.image('surfer','surfer.png');
+         game.load.image('main-buttons', 'assets/sprites/main-buttons.png');
         
     },
     
     create: function () {
+        // Add main buttons
+        this.pic = game.add.sprite(0, this.h-this.heightButton, 'main-buttons');
+        this.pic.scale.set(1);
+
+        this.button_1_text = game.add.text(this.widthButton/4, this.h-this.heightButton/1.5, "APPL", { font: "54px Arial", fill: "#0000ff" });
+        this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, "GOOGL", { font: "54px Arial", fill: "#00ff40" });
+        this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, "YHOO", { font: "54px Arial", fill: "#ff0000" }); 
+
+        game.input.onTap.add(this.onTap, this);
 
         //Put the logo on the background
         var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
         logo.anchor.setTo(0.5, 0.5);
         game.time.advancedTiming = true;
         
-        
+
         //Init data of all stocks
         init_all_companies_stocks(this.all_companies_stock,this.numCompanies);
+
         
         //Generate the sprite for the surfer
         this.surfer = game.add.sprite(this.X_OFFSET_OF_SURFER, 0, 'surfer');
         
         game.physics.arcade.enable([this.surfer]);
 
-	game.physics.arcade.gravity.y = 200;
+	    game.physics.arcade.gravity.y = 200;
 
         this.surfer.body.allowGravity = false;
            
+        //C
         
         //Generate the sprites for the plots
         for(var i = 0; i < this.numCompanies; i++){
@@ -69,14 +98,23 @@ window.onload = function() {
             
         }
         
-         this.sprites[0].visible = false;
-        this.sprites[1].visible = false;
+        
+      
        
 
     },
 
-    render: function () {
-        //xPosition++;
+    update: function(){
+         //Only draw the active plot
+        for(var j = 0; j < this.numCompanies; j++){
+            if(j==this.activePlot){
+                this.sprites[j].visible = true;
+            }
+            else{
+                this.sprites[j].visible = false;
+            }
+        }
+        
         for(var i = 0; i < this.numCompanies; i++){
             this.sprites[i].x-= this.GAME_SPEED;
             
@@ -88,10 +126,15 @@ window.onload = function() {
         this.surfer.y = this.getHeightOfSurfer() + this.Y_OFFSET_OF_GRAPH -this.SURFER_DIMENSIONS + 3;
         //If goes down, sprite goes up 3 pixels (half of grosor of the linea)
         if(this.surferSlope < 0){
-            this.surfer.y -=4;
+            this.surfer.y -=this.LINE_WIDTH / 2 ;
         }
+    },
+    render: function () {
+        //xPosition++;
         
-        console.log(this.surferSlope)
+       
+        
+        //console.log(this.surferSlope)
         
        
        
@@ -115,7 +158,7 @@ window.onload = function() {
 
           // set a fill and line style
           graphObject.beginFill(0xFF3300);
-          graphObject.lineStyle(6, 0xffd900*(i+1), 1);
+          graphObject.lineStyle(this.LINE_WIDTH, this.COLORS[j], 1);
 
           // draw a shape
           graphObject.moveTo(ini_x, ini_y);
@@ -129,17 +172,68 @@ window.onload = function() {
         var finalPoint = initialPoint + 1;
         var pixelsAdvancedSinceFirstPoint = (relativeAdvancedPixels - initialPoint*this.PIXELS_PER_POINT);
         var percentageAdvancedSinceFirstPoint = (pixelsAdvancedSinceFirstPoint/this.PIXELS_PER_POINT);
-        var heightDifference = this.all_companies_stock[2][finalPoint] - this.all_companies_stock[2][initialPoint];
+        var heightDifference = this.all_companies_stock[this.activePlot][finalPoint] - this.all_companies_stock[this.activePlot][initialPoint];
         this.surferSlope = -(heightDifference); //So if goes down, slope is negative
-        var heightRightNow = this.all_companies_stock[2][initialPoint] + percentageAdvancedSinceFirstPoint*heightDifference;
+        var heightRightNow = this.all_companies_stock[this.activePlot][initialPoint] + percentageAdvancedSinceFirstPoint*heightDifference;
         return heightRightNow;
+    },
+    changeButton: function(id, text){
+            switch(id){
+                case 1:
+                    this.button_1_text.destroy();
+                    this.button_1_text = game.add.text(this.widthButton/4, this.h-this.heightButton/1.5, text, { font: "54px Arial", fill: "#ffffff" });
+                    break;
+                case 2:
+                    this.button_2_text.destroy();
+                    this.button_2_text = game.add.text(this.heightButton+this.widthButton/1.7, this.h-this.heightButton/1.5, text, { font: "54px Arial", fill: "#ffffff" });
+                    break;
+                case 3:
+                    this.button_3_text.destroy();
+                    this.button_3_text = game.add.text(2*this.heightButton+this.widthButton, this.h-this.heightButton/1.5, text, { font: "54px Arial", fill: "#ffffff" });
+                    break;
+                default: 
+                    break;
+            }
+    },
+    onTap: function(pointer, doubleTap) {
+            // Calculate the corners of the menu
+            var x1 = 0, x2 = this.w,
+                y1 = this.h-this.heightButton, y2 = this.h;
+
+            var limitButton2 = 327;
+            var limitButton3 = 654;
+
+            // Check if the click was inside the menu
+            if(pointer.clientX > x1 && pointer.clientX < x2 && pointer.clientY > y1 && pointer.clientY < y2 ){
+                // The choicemap is an array that will help us see which item was clicked
+                var choise;
+
+                // Calculate the choice 
+                if(pointer.clientX<limitButton2){
+                    choise = 1;
+                } else if(pointer.clientX>=limitButton2 && pointer.clientX<=limitButton3){
+                    choise = 2;
+                } else if(pointer.clientX>limitButton3){
+                    choise = 3;
+                } else {
+                    choise = 0;
+                }
+                
+                //Cambiar la activa
+                this.activePlot = choise - 1;
+                console.log(this.activePlot);
+                return(choise);
+            } else {
+                console.log("Tap out of menu: " + pointer.clientX + " - " + pointer.clientY);
+            }
+
     }
 
 };
 
     
     
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
+  var game = new Phaser.Game(961, 1550, Phaser.AUTO, '');
   game.state.add('Game',SurfGame,true);
   
   
