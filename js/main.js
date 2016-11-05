@@ -66,10 +66,11 @@ window.onload = function() {
          game.load.image('surfer','surfer.png');
          game.load.image('main-buttons', 'assets/sprites/main-buttons.png');
          game.load.image('main-buttons-grey', 'assets/sprites/main-buttons-grey.png');
+         game.load.image('try-again','assets/sprites/button-tryagain.png');
          game.load.image('back','assets/back.png');
          game.load.image('gift','assets/sprites/gift.png');
         game.load.image('badGift','assets/sprites/badGift.png');
-        
+
     },
     
     create: function () {
@@ -104,7 +105,7 @@ window.onload = function() {
         //game.time.events.add(500, this.substractCounter, this);
         //Init data of all stocks
         //init_all_companies_stocks(this.all_companies_stock,this.numCompanies);
-        load_year_stock_values(this.all_companies_stock, true);  // load from JSON
+        load_stock_values(this.all_companies_stock, 'random');  // load from JSON
 
 
         
@@ -131,7 +132,7 @@ window.onload = function() {
         }
         this.average = (this.max - this.min) / 2;
 
-        console.log(this.max + " - " + this.min + " - " + this.average);
+        //console.log(this.max + " - " + this.min + " - " + this.average);
 
         //Generate the sprites for the plots
         for(var i = 0; i < this.numCompanies; i++){
@@ -151,11 +152,11 @@ window.onload = function() {
         }
         
         //Generate the line of the mean
-        var g = game.add.graphics(0,this.average);
+        var g = game.add.graphics(0,this.Y_OFFSET_OF_GRAPH+this.average);
         g.beginFill(0x000000);
         g.lineStyle(5, 0xFFFFFF, 1);
         g.moveTo(0,this.average);
-        console.log(this.average);
+        //console.log(this.average);
         g.lineTo(this.w,this.average);
         g.endFill();
             
@@ -512,7 +513,7 @@ window.onload = function() {
           // set a fill and line style
          this.timeBarGraphics.beginFill(0x00FF00);
          this.timeBarGraphics.lineStyle(5, 0xFFFFFF, 1);
-         console.log(this.blockedCounter/this.TIME_PER_MOVEMENT);
+         //console.log(this.blockedCounter/this.TIME_PER_MOVEMENT);
          this.timeBarGraphics.drawRect(0, this.h-this.heightButton-50, (1-this.blockedCounter/this.TIME_PER_MOVEMENT)*961, 50);
          this.timeBarGraphics.endFill();
          this.blockedCounter-= 0.5;
@@ -522,10 +523,14 @@ window.onload = function() {
      calculatePoints: function() {
         var actual = this.getHeightOfSurfer();
         //console.log(actual);
-         
-         this.points = Math.floor(this.points + (this.average - actual)/100);
-        
-        if(this.counter_points==0){
+         var newPoints = Math.floor(this.points + (this.average - actual)/100);
+         if(isNaN(newPoints)){
+            localStorage.setItem('points',this.points);
+            this.game.state.start("GameOver",true,false,this.score);
+         } else {
+            this.points = newPoints;
+         }
+        if(this.counter_points==0 && !isNaN(newPoints)){
           this.changeButton(4, undefined);
           this.counter_points = 60;
         }
@@ -538,7 +543,7 @@ window.onload = function() {
     
   var game = new Phaser.Game(961, 1550, Phaser.CANVAS, '');
   game.state.add('Game',SurfGame,true);
-  
+  game.state.add('GameOver',gameOver);
   
 
 };
