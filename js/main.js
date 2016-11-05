@@ -57,16 +57,23 @@ window.onload = function() {
      buttonsEnabled: true,
    date_text_sprite: undefined,
    date_text: undefined,
+     background: undefined,
     
     preload: function(){
          //game.load.image('logo', 'phaser.png');
          game.load.image('surfer','surfer.png');
          game.load.image('main-buttons', 'assets/sprites/main-buttons.png');
          game.load.image('main-buttons-grey', 'assets/sprites/main-buttons-grey.png');
+         game.load.image('back','assets/back.png');
         
     },
     
     create: function () {
+        
+         //Put the logo on the background
+       // var background  = game.add.sprite(0, 0, 'back');
+        
+         background = game.add.tileSprite(0, 0, this.w, this.h, "back");
         // Add main buttons
         this.pic = game.add.sprite(0, this.h-this.heightButton, 'main-buttons');
         
@@ -84,8 +91,7 @@ window.onload = function() {
 
         game.input.onTap.add(this.onTap, this);
 
-        //Put the logo on the background
-        //var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
+       
         //logo.anchor.setTo(0.5, 0.5);
         game.time.advancedTiming = true;
         
@@ -163,16 +169,16 @@ window.onload = function() {
         
         
         // código escrito por Alberto perfectamente formateado
-        date_text_sprite = game.add.sprite(0, 0);
+        //date_text_sprite = game.add.sprite(this.w / 2 - 100, this.h - this.heightButton - 300);
 
-
-        var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
-
-        date_text = game.add.text(0, 0, "", style);
-        date_text.anchor.set(0.5);
+       
+        
+      
     },
 
     update: function(){
+        
+        background.tilePosition.x -= 0.5;
          //Only draw the active plot
         for(var j = 0; j < this.numCompanies; j++){
             if(j==this.activePlot){
@@ -214,11 +220,16 @@ window.onload = function() {
         if(this.advancedPixels % this.PIXELS_PER_POINT == 0){
              var current_point = this.getCurrentPoint();
             dates = get_dates_list();
-            var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
+            //var style = { font: "60px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: date_text_sprite.width, align: "center", backgroundColor: "#000000" };
 
-            date_text = game.add.text(0, 0, dates[current_point], style);
-            date_text.x = Math.floor(date_text_sprite.x + date_text_sprite.width / 2);
-            date_text.y = Math.floor(date_text_sprite.y + date_text_sprite.height / 2);
+            if(this.date_text){
+                this.date_text.destroy();
+            }
+            
+            this.date_text = game.add.text(this.w / 2 - 150, this.h - this.heightButton - 220, dates[current_point], { font: "64px Arial", fill: "#ffffff" });
+            //this.date_text = game.add.text(0, 0, dates[current_point], style);
+            //this.date_text.x = Math.floor(date_text_sprite.x + date_text_sprite.width / 2);
+            //this.date_text.y = Math.floor(date_text_sprite.y + date_text_sprite.height / 2);
         }
        
     },
