@@ -20,7 +20,7 @@ function load_stock_values(all_companies_stocks, strategy) {
   }
   else if (strategy == 'random') {
     var num_companies = 3;
-    var num_stock_values = 500;
+    var num_stock_values = 800;
     // for each company
     for (var i = 0; i < num_companies; i++) {
       console.log("Generating random stocks for company " + i);
