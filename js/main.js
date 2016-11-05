@@ -11,7 +11,7 @@ window.onload = function() {
 
      
     //Constants
-     PIXELS_PER_POINT: 100,
+     PIXELS_PER_POINT: 50,
      GAME_SPEED: 1,
      Y_OFFSET_OF_GRAPH:400,
      SURFER_DIMENSIONS: 50,
@@ -43,6 +43,7 @@ window.onload = function() {
     surferSlope:0,
     activePlot:0,
      jumping:false,
+     blockedCounter: 6,
     
     preload: function(){
          game.load.image('logo', 'phaser.png');
@@ -68,6 +69,7 @@ window.onload = function() {
         game.time.advancedTiming = true;
         
 
+        game.time.events.add(500, this.substractCounter, this);
         //Init data of all stocks
         //init_all_companies_stocks(this.all_companies_stock,this.numCompanies);
         load_year_stock_values(this.all_companies_stock, true);  // load from JSON
@@ -243,7 +245,7 @@ window.onload = function() {
                 console.log(this.activePlot);
                 return(choise);
             } else {
-                console.log("Tap out of menu: " + pointer.clientX + " - " + pointer.clientY);
+                
                 if(!this.jumping){
                      this.surfer.body.allowGravity = true;
                  this.surfer.body.velocity.y = -this.JUMP_HEIGHT;
@@ -252,7 +254,12 @@ window.onload = function() {
                 
             }
 
-    }
+    },
+     substractCounter: function(){
+         this.blockedCounter-= 0.5;
+         game.time.events.add(500, this.substractCounter, this);
+         console.log(this.blockedCounter);
+     }
 
 };
 
