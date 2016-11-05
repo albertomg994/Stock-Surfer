@@ -34,7 +34,7 @@ classApp.controller('classCtrl', function ($scope, $window) {
 
   $scope.play = function() {
   	if($scope.activated1 == true && $scope.activated2 == true && $scope.activated3 == true){
-		$window.location.href = "http://" + $window.location.host + "/game.html";
+		$window.location = "/game.html";
   	} else {
   		alert("You must select three options");
   	}

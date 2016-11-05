@@ -23,6 +23,6 @@ gameOver.prototype = {
 	},
 	playTheGame: function(){
 		//this.game.state.start("Game");
-		window.location.href = 'http://' + window.location.host + '/index.html';
+		window.location = '/index.html';
 	}
 }
